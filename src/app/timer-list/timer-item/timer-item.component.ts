@@ -16,8 +16,12 @@ export class TimerItemComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	playTimer () {
+	playTimer() {
 		this.timerService.startTimer(this.index);
-	}
+    }
+    
+    stopTimer() {
+        this.timerService.stopTimer(this.index);
+    }
 
 }

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class TimerService {
-    private interval;
+    private interval = [];
     public timers: Timer[] = [
         new Timer(
             {
@@ -62,7 +62,7 @@ export class TimerService {
 
     startTimer(_index) {
         let _time;
-        this.interval = Observable.interval(1000).subscribe(() => {
+        this.interval[_index] = Observable.interval(1000).subscribe(() => {
             _time = this.addASecond(this.timers[_index].timeSpent.hours, this.timers[_index].timeSpent.minutes, this.timers[_index].timeSpent.seconds);
             this.timers[_index].timeSpent = {
                 hours: _time[0],
@@ -72,8 +72,8 @@ export class TimerService {
         });
     }
 
-    stopTimer() {
-        this.interval.unsubscribe();
+    stopTimer(_index) {
+        this.interval[_index].unsubscribe();
     }
 
     addASecond(_hours, _minutes, _seconds) {

@@ -3,7 +3,7 @@
         <div class="btn-group col-3" role="group">
             <button (click)="playTimer(index)" class="btn btn-outline-primary active"><span class="oi oi-media-play"></span></button>
             <button class="btn btn-outline-secondary"><span class="oi oi-media-pause"></span></button>
-            <button class="btn btn-outline-secondary"><span class="oi oi-media-stop"></span></button>
+            <button (click)="stopTimer(index)" class="btn btn-outline-secondary"><span class="oi oi-media-stop"></span></button>
         </div>
         <div class="col-7">
             {{timer.description}}
