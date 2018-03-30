@@ -13,8 +13,7 @@ export class TimerListComponent implements OnInit {
     constructor(private timerService: TimerService) { }
 
     ngOnInit() {
-        this.timers = this.timerService.getTimers();
-        console.log(this.timerService.showDate());
+        this.timers = this.timerService.timers;
     }
 
 }

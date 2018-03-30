@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Time } from '@angular/common';
 import { Timer } from '../shared/timers.model';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class TimerService {
-    private timers: Timer[] = [
+    private interval;
+    public timers: Timer[] = [
         new Timer(
             {
                 hours: 7,
-                minutes: 15
+                minutes: 15,
+                seconds: 0,
             },
             {
                 hours: 8,
-                minutes: 0
+                minutes: 0,
+                seconds: 0,
             },
             new Date(1522188002383),
             'Developing arrows',
@@ -21,11 +25,13 @@ export class TimerService {
         new Timer(
             {
                 hours: 5,
-                minutes: 30
+                minutes: 30,
+                seconds: 0,
             },
             {
                 hours: 5,
-                minutes: 30
+                minutes: 30,
+                seconds: 0,
             },
             new Date(1522188002383),
             'Building cats',
@@ -38,8 +44,8 @@ export class TimerService {
 
     addTimer() {
         this.timers.push({
-            timeSpent: {hours: 0, minutes: 0},
-            timeEstimated: {hours: 0, minutes: 0},
+            timeSpent: {hours: 0, minutes: 0, seconds: 0},
+            timeEstimated: {hours: 0, minutes: 0, seconds: 0},
             date: new Date(),
             description: '',
             status: 'none'
@@ -52,5 +58,34 @@ export class TimerService {
 
     getTimers() {
         return this.timers;
+    }
+
+    startTimer(_index) {
+        let _time;
+        this.interval = Observable.interval(1000).subscribe(() => {
+            _time = this.addASecond(this.timers[_index].timeSpent.hours, this.timers[_index].timeSpent.minutes, this.timers[_index].timeSpent.seconds);
+            this.timers[_index].timeSpent = {
+                hours: _time[0],
+                minutes: _time[1],
+                seconds: _time[2]
+            }
+        });
+    }
+
+    stopTimer() {
+        this.interval.unsubscribe();
+    }
+
+    addASecond(_hours, _minutes, _seconds) {
+        if (_seconds < 59){
+            _seconds++;
+            return [_hours, _minutes, _seconds];
+        } else if (_minutes < 59) {
+            _minutes++;
+            return [_hours, _minutes, 0];
+        } else {
+            _hours++;
+            return [_hours, 0, 0];
+        }
     }
 }
