@@ -20,7 +20,7 @@ export class TimerService {
             },
             new Date(1522188002383),
             'Developing arrows',
-            'none'
+            'stop'
         ),
         new Timer(
             {
@@ -35,7 +35,7 @@ export class TimerService {
             },
             new Date(1522188002383),
             'Building cats',
-            'play'
+            'stop'
         )
     ];
 
@@ -43,13 +43,17 @@ export class TimerService {
     }
 
     addTimer() {
-        this.timers.push({
+        this.timers.unshift({
             timeSpent: {hours: 0, minutes: 0, seconds: 0},
             timeEstimated: {hours: 0, minutes: 0, seconds: 0},
             date: new Date(),
             description: '',
-            status: 'none'
+            status: 'stop'
         });
+    }
+
+    removeTimer(_index) {
+        this.timers.splice(_index, 1);
     }
 
     showDate() {
