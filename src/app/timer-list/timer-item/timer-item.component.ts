@@ -33,10 +33,15 @@ export class TimerItemComponent implements OnInit {
 
     toggleInputDescription() {
         this.inputDescription = this.inputDescription ? false : true;
+        this.updateTimer();
+    }
+
+    updateTimer() {
+        this.timerService.updateTimer(this.timer);
     }
 
     removeTimer() {
-        this.timerService.removeTimer(this.index);
+        this.timerService.removeTimer(this.timer.id);
     }
 
 }

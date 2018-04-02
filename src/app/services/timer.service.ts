@@ -2,48 +2,30 @@ import { Injectable } from '@angular/core';
 import { Time } from '@angular/common';
 import { Timer } from '../shared/timers.model';
 import { Observable } from 'rxjs/Rx';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Injectable()
 export class TimerService {
     private interval = [];
-    public timers: Timer[] = [
-        new Timer(
-            {
-                hours: 7,
-                minutes: 15,
-                seconds: 0,
-            },
-            {
-                hours: 8,
-                minutes: 0,
-                seconds: 0,
-            },
-            new Date(1522188002383),
-            'Developing arrows',
-            'stop'
-        ),
-        new Timer(
-            {
-                hours: 5,
-                minutes: 30,
-                seconds: 0,
-            },
-            {
-                hours: 5,
-                minutes: 30,
-                seconds: 0,
-            },
-            new Date(1522188002383),
-            'Building cats',
-            'stop'
-        )
-    ];
+    private timersCollectionRef: AngularFirestoreCollection<Timer>;
+    public timers: Observable<Timer[]>;
 
-    constructor() { 
+    constructor(public angularFireAuth: AngularFireAuth, public angularFirestore: AngularFirestore) {
+        this.angularFireAuth.auth.signInAnonymously();
+        this.timersCollectionRef = this.angularFirestore.collection('timers');
+        this.timers = this.timersCollectionRef.snapshotChanges().map(actions => {
+            return actions.map( a => {
+                const data = a.payload.doc.data() as Timer;
+                const id = a.payload.doc.id;
+                return {id, ...data}
+            });
+        });
     }
 
     addTimer() {
-        this.timers.unshift({
+        this.timersCollectionRef.add({
             timeSpent: {hours: 0, minutes: 0, seconds: 0},
             timeEstimated: {hours: 0, minutes: 0, seconds: 0},
             date: new Date(),
@@ -52,8 +34,12 @@ export class TimerService {
         });
     }
 
-    removeTimer(_index) {
-        this.timers.splice(_index, 1);
+    updateTimer(_timer) {
+        this.timersCollectionRef.doc(_timer.id).update(_timer);
+    }
+
+    removeTimer(_id) {
+        this.timersCollectionRef.doc(_id).delete();
     }
 
     showDate() {
