@@ -16,6 +16,7 @@ import { TimerListActionsComponent } from './timer-list/timer-list-actions/timer
 import { TimerService } from './services/timer.service';
 
 import { credentials } from './config';
+import { AutoFocusDirective } from './shared/auto-focus.directive';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { credentials } from './config';
     HeaderComponent,
     TimerListComponent,
     TimerItemComponent,
-    TimerListActionsComponent
+    TimerListActionsComponent,
+    AutoFocusDirective
   ],
   imports: [
     BrowserModule,
