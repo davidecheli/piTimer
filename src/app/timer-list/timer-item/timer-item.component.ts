@@ -27,13 +27,17 @@ export class TimerItemComponent implements OnInit {
     }
 
     toggleTimerStatus() {
-        this.timer.status = this.timer.status === 'play' ? 'stop' : 'play';
+        this.timerService.timerPlay[this.timer.id || this.timer._id] = !this.isTimerPlay();
         this.updateTimer();
     }
 
     toggleInputDescription() {
         this.inputDescription = this.inputDescription ? false : true;
         this.updateTimer();
+    }
+
+    isTimerPlay() {
+        return this.timerService.timerPlay[this.timer.id || this.timer._id] || false;
     }
 
     updateTimer() {

@@ -9,12 +9,13 @@ import { AngularFireAuth } from 'angularfire2/auth';
 @Injectable()
 export class TimerService {
     private interval = [];
+    public timerPlay = [];
     private timersCollectionRef: AngularFirestoreCollection<Timer>;
     public timers: Observable<Timer[]>;
 
     constructor(public angularFireAuth: AngularFireAuth, public angularFirestore: AngularFirestore) {
         this.angularFireAuth.auth.signInAnonymously();
-        this.timersCollectionRef = this.angularFirestore.collection('timers');
+        this.timersCollectionRef = this.angularFirestore.collection('timers', ref => ref.orderBy('date', 'desc'));
         this.timers = this.timersCollectionRef.snapshotChanges().map(actions => {
             return actions.map( a => {
                 const _data = a.payload.doc.data() as Timer;
