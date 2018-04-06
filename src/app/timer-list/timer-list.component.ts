@@ -15,6 +15,10 @@ export class TimerListComponent implements OnInit {
 
     ngOnInit() {
         this.timers = this.timerService.timers;
+        /*this.timers.forEach(function(_timer) {
+            if (_timer.status === 'play') _timer.status = 'stop';
+        });*/
+        
     }
 
 }

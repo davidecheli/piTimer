@@ -17,9 +17,9 @@ export class TimerService {
         this.timersCollectionRef = this.angularFirestore.collection('timers');
         this.timers = this.timersCollectionRef.snapshotChanges().map(actions => {
             return actions.map( a => {
-                const data = a.payload.doc.data() as Timer;
-                const id = a.payload.doc.id;
-                return {id, ...data}
+                const _data = a.payload.doc.data() as Timer;
+                const _id = a.payload.doc.id;
+                return {_id, ..._data}
             });
         });
     }
@@ -35,10 +35,11 @@ export class TimerService {
     }
 
     updateTimer(_timer) {
-        this.timersCollectionRef.doc(_timer.id).update(_timer);
+        this.timersCollectionRef.doc(_timer.id || _timer._id).update(_timer);
     }
 
     removeTimer(_id) {
+        this.stopTimer(_id);
         this.timersCollectionRef.doc(_id).delete();
     }
 
@@ -50,32 +51,36 @@ export class TimerService {
         return this.timers;
     }
 
-    startTimer(_index) {
-        let _time;
-        this.interval[_index] = Observable.interval(1000).subscribe(() => {
-            _time = this.addASecond(this.timers[_index].timeSpent.hours, this.timers[_index].timeSpent.minutes, this.timers[_index].timeSpent.seconds);
-            this.timers[_index].timeSpent = {
-                hours: _time[0],
-                minutes: _time[1],
-                seconds: _time[2]
-            }
+    startTimer(_timer) {
+        let _timeTemp = _timer.timeSpent;
+        this.interval[_timer.id || _timer._id] = Observable.interval(1000).subscribe(() => {
+            _timeTemp = this.addASecond(_timeTemp.hours, _timeTemp.minutes, _timeTemp.seconds);
+
+            this.timersCollectionRef.doc(_timer.id || _timer._id).update({
+                timeSpent: {hours: _timeTemp.hours, minutes: _timeTemp.minutes, seconds: _timeTemp.seconds},
+                timeEstimated: _timer.timeEstimated,
+                date: _timer.date,
+                description: _timer.description,
+                status: _timer.status
+            });
         });
     }
 
-    stopTimer(_index) {
-        this.interval[_index].unsubscribe();
+    stopTimer(_timerId) {
+        if (this.interval[_timerId])
+            this.interval[_timerId].unsubscribe();
     }
 
     addASecond(_hours, _minutes, _seconds) {
         if (_seconds < 59){
             _seconds++;
-            return [_hours, _minutes, _seconds];
+            return {hours: _hours, minutes: _minutes, seconds: _seconds};
         } else if (_minutes < 59) {
             _minutes++;
-            return [_hours, _minutes, 0];
+            return {hours: _hours, minutes: _minutes, seconds: 0};
         } else {
             _hours++;
-            return [_hours, 0, 0];
+            return {hours: _hours, minutes: 0, seconds: 0};
         }
     }
 }

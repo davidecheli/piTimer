@@ -9,7 +9,6 @@ import { TimerService } from '../../services/timer.service';
 })
 export class TimerItemComponent implements OnInit {
     @Input() timer: Timer;
-    @Input() index: number;
     inputDescription = false;
 
 	constructor(private timerService:TimerService) { }
@@ -18,17 +17,18 @@ export class TimerItemComponent implements OnInit {
 	}
 
 	playTimer() {
-        this.timerService.startTimer(this.index);
+        this.timerService.startTimer(this.timer);
         this.toggleTimerStatus();
     }
     
     stopTimer() {
-        this.timerService.stopTimer(this.index);
         this.toggleTimerStatus();
+        this.timerService.stopTimer(this.timer.id || this.timer._id);
     }
 
     toggleTimerStatus() {
-        this.timerService.timers[this.index].status = this.timerService.timers[this.index].status === 'play' ? 'stop' : 'play';
+        this.timer.status = this.timer.status === 'play' ? 'stop' : 'play';
+        this.updateTimer();
     }
 
     toggleInputDescription() {
@@ -41,7 +41,7 @@ export class TimerItemComponent implements OnInit {
     }
 
     removeTimer() {
-        this.timerService.removeTimer(this.timer.id);
+        this.timerService.removeTimer(this.timer.id || this.timer._id);
     }
 
 }

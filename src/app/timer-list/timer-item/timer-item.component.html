@@ -8,7 +8,7 @@
             <span *ngIf="!inputDescription" (click)="toggleInputDescription()" class="hover-fake-input">
                 {{timer.description || 'Click to edit'}}
             </span>
-            <input *ngIf="inputDescription" (blur)="toggleInputDescription()" [(ngModel)]="timer.description" class="form-control" type="text" placeholder="Description">
+            <input *ngIf="inputDescription" (blur)="toggleInputDescription()" [(ngModel)]="timer.description" appAutoFocus class="form-control" type="text" placeholder="Description">
         </div>
         <div class="col-2 text-right">
             {{timer.timeSpent.hours}}:{{timer.timeSpent.minutes}}:{{timer.timeSpent.seconds}}

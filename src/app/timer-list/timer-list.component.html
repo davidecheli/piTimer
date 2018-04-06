@@ -1,6 +1,6 @@
 <div class="container">
     <app-timer-list-actions></app-timer-list-actions>
     <ul class="list-group">
-        <app-timer-item *ngFor="let timer of timers | async; let i = index" [timer]="timer" [index]="i"></app-timer-item>
+        <app-timer-item *ngFor="let timer of timers | async" [timer]="timer"></app-timer-item>
     </ul>
 </div>

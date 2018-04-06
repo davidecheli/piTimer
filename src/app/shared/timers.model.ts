@@ -15,4 +15,5 @@ export interface Timer {
     description: string,
     status: string,
     id?: string,
+    _id?: string
 }
