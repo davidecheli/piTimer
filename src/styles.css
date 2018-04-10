@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+.box-shadow {
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, .05);
+}
+
+.hover-fake-input {
+    display: flex;
+    height: 100%;
+    padding: .375rem .75rem;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.hover-fake-input:hover {
+    border: 1px solid #ccc;
+}
